@@ -1,0 +1,25 @@
+---
+import Icono from './Icono.astro';
+import { enlaceWhatsApp } from '../lib/whatsapp';
+
+interface Props {
+  mensaje: string;
+  /** Sección desde la que se hace clic (para la medición) */
+  origen: string;
+  texto?: string;
+  variante?: 'primario' | 'secundario' | 'blanco';
+  clase?: string;
+}
+const { mensaje, origen, texto = 'Cotizar por WhatsApp', variante = 'primario', clase = '' } = Astro.props;
+---
+<a
+  href={enlaceWhatsApp(mensaje)}
+  target="_blank"
+  rel="noopener"
+  class:list={['boton', `boton-${variante}`, clase]}
+  data-lead="whatsapp"
+  data-origen={origen}
+>
+  <Icono nombre="whatsapp" clase="size-5 shrink-0" />
+  <span>{texto}<span class="sr-only"> (abre WhatsApp en una pestaña nueva)</span></span>
+</a>

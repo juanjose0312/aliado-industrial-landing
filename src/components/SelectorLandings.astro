@@ -1,0 +1,44 @@
+---
+/** Navegación entre las dos landings. Siempre visible (en móvil, bajo el logo). */
+import { rutas } from '../config/site';
+
+interface Props {
+  actual: 'equipos' | 'bombas' | 'otra';
+}
+const { actual } = Astro.props;
+const opciones = [
+  { clave: 'equipos', href: rutas.equipos, linea1: 'Equipos tipo vactor', linea2: 'y tanques' },
+  { clave: 'bombas', href: rutas.bombas, linea1: 'Bombas', linea2: 'de vacío' },
+] as const;
+---
+<nav aria-label="Líneas de negocio" class="selector h-full">
+  <ul class="grid h-full grid-cols-2">
+    {opciones.map((o) => {
+      const activa = o.clave === actual;
+      return (
+        <li>
+          <a
+            href={o.href}
+            aria-current={activa ? 'page' : undefined}
+            class:list={[
+              'selector-opcion group relative flex h-full min-h-14 flex-col justify-center px-3 py-2 text-center leading-none uppercase transition-colors lg:min-h-0 lg:px-5 lg:py-0',
+              activa ? 'bg-acero-800 text-white' : 'bg-acero-900 text-acero-300 hover:bg-acero-800 hover:text-white',
+            ]}
+          >
+            <span class="font-display text-[1.0625rem] font-extrabold tracking-wide xs:text-lg lg:text-[1.1875rem]">
+              {o.linea1}
+              <span class="block lg:inline"> {o.linea2}</span>
+            </span>
+            <span
+              aria-hidden="true"
+              class:list={[
+                'absolute inset-x-0 bottom-0 h-1',
+                activa ? 'bg-rojo' : 'bg-transparent group-hover:bg-acero-600',
+              ]}
+            />
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</nav>

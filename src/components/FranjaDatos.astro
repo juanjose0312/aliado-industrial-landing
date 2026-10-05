@@ -1,0 +1,26 @@
+---
+/** Franja de datos bajo el hero, en tipografía mono. */
+interface Props {
+  items: { etiqueta: string; valor: string }[];
+}
+const { items } = Astro.props;
+---
+<div class="border-y border-acero-700 bg-acero-900">
+  <dl class:list={['contenedor grid grid-cols-2', items.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3']}>
+    {items.map((item, i) => (
+      <div
+        class:list={[
+          'flex flex-col-reverse justify-end gap-1 border-acero-700 py-4 pr-3 sm:py-5',
+          i % 2 === 0 ? 'border-r' : 'pl-4 sm:pl-6',
+          i >= 2 && 'border-t lg:border-t-0',
+          i > 0 && 'lg:border-l lg:pl-6',
+          'lg:border-r-0',
+          items.length === 3 && i === 2 && 'col-span-2 border-r-0 lg:col-span-1',
+        ]}
+      >
+        <dt class="text-[0.8125rem] leading-snug text-acero-300 sm:text-sm">{item.etiqueta}</dt>
+        <dd class="font-mono text-[1.0625rem] leading-tight font-medium text-white sm:text-xl">{item.valor}</dd>
+      </div>
+    ))}
+  </dl>
+</div>

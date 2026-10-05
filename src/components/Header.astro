@@ -1,0 +1,49 @@
+---
+import { Image } from 'astro:assets';
+import SelectorLandings from './SelectorLandings.astro';
+import BotonWhatsApp from './BotonWhatsApp.astro';
+import Icono from './Icono.astro';
+import pieza from '../assets/logo/logo-pieza.png';
+import { site, contacto, rutas } from '../config/site';
+import { enlaceTelefono } from '../lib/whatsapp';
+
+interface Props {
+  actual: 'equipos' | 'bombas' | 'otra';
+  mensajeWA: string;
+}
+const { actual, mensajeWA } = Astro.props;
+---
+<header class="z-40 border-b border-acero-700 bg-acero-950 lg:sticky lg:top-0">
+  <a href="#contenido" class="sr-only-focusable absolute top-2 left-2 z-50 bg-white px-4 py-2 font-semibold text-tinta">Saltar al contenido</a>
+  <div class="contenedor flex flex-wrap items-stretch lg:flex-nowrap lg:gap-6">
+    <a href={rutas.equipos} class="flex items-center gap-2.5 py-2.5 lg:py-3" aria-label={`${site.nombreCorto}, inicio`}>
+      <Image src={pieza} alt="" width={104} height={81} class="h-9 w-auto lg:h-10" loading="eager" />
+      <span class="font-display text-xl leading-none font-extrabold tracking-wide uppercase">
+        Aliado <span class="text-rojo-claro">Industrial</span>
+      </span>
+    </a>
+
+    <!-- Móvil: llamada como ícono; en escritorio se muestra el número completo -->
+    <a
+      href={enlaceTelefono}
+      class="ml-auto flex items-center gap-2 py-2.5 pl-3 text-white lg:order-3 lg:ml-0 lg:pl-0"
+      data-lead="llamada"
+      data-origen="header"
+    >
+      <span class="grid size-11 place-items-center rounded-full border border-acero-600 lg:size-9">
+        <Icono nombre="telefono" clase="size-5 lg:size-4" />
+      </span>
+      <span class="sr-only lg:not-sr-only lg:font-mono lg:text-[0.9375rem] lg:whitespace-nowrap">
+        <span class="lg:hidden">Llamar al </span>{contacto.telefonoVisible}
+      </span>
+    </a>
+
+    <div class="-mx-4 w-[calc(100%+2rem)] border-t border-acero-700 sm:-mx-6 sm:w-[calc(100%+3rem)] lg:order-2 lg:mx-0 lg:ml-auto lg:w-auto lg:border-t-0 lg:border-x lg:border-acero-700">
+      <SelectorLandings actual={actual} />
+    </div>
+
+    <div class="hidden items-center lg:order-4 lg:flex">
+      <BotonWhatsApp mensaje={mensajeWA} origen="header" texto="Cotizar" clase="min-h-11! py-2! text-base!" />
+    </div>
+  </div>
+</header>

@@ -1,0 +1,291 @@
+---
+import { Picture, Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import FichaTecnica from '../components/FichaTecnica.astro';
+import Proceso from '../components/Proceso.astro';
+import Galeria from '../components/Galeria.astro';
+import BandaCruzada from '../components/BandaCruzada.astro';
+import FormularioCotizacion from '../components/FormularioCotizacion.astro';
+import Faq from '../components/Faq.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+import BotonWhatsApp from '../components/BotonWhatsApp.astro';
+import Icono from '../components/Icono.astro';
+import BombaVacio from '../components/ilustraciones/BombaVacio.astro';
+import Testimonios from '../components/opcionales/Testimonios.astro';
+import Clientes from '../components/opcionales/Clientes.astro';
+import Cifras from '../components/opcionales/Cifras.astro';
+import PrecioDesde from '../components/opcionales/PrecioDesde.astro';
+import { fotos, galeria } from '../assets/fotos';
+import { site, equipos, mensajesWA, rutas, accesorios, materiales } from '../config/site';
+import { rangoCapacidad } from '../lib/unidades';
+
+const wa = mensajesWA.equipos;
+const rango = rangoCapacidad();
+const capacidadTexto = `${rango.L[0]} a ${rango.L[1]} litros`;
+
+const clientes = [
+  {
+    titulo: 'Pozos sépticos',
+    texto: 'Empresas de limpieza y desinfección de pozos y baños sépticos que necesitan succionar y transportar el lodo.',
+  },
+  {
+    titulo: 'Trampas de grasa',
+    texto: 'Empresas de limpieza de trampas de grasa que necesitan un equipo del tamaño de su ruta, sin pagar capacidad que no usan.',
+  },
+  {
+    titulo: 'Residuos petroleros',
+    texto: `Petroleras y contratistas que manejan desechos petroleros. Fabricamos tanques de hasta ${rango.L[1]} litros, unos ${rango.bbl[1]} barriles.`,
+  },
+  {
+    titulo: 'Recolección de residuos',
+    texto: 'Empresas de recolección que transportan residuos líquidos y lodos, en Bogotá y en el resto del país.',
+  },
+];
+
+const preguntas = [
+  {
+    pregunta: '¿Cuánto se demora la fabricación?',
+    respuesta: `${equipos.diasFabricacion} días hábiles.`,
+  },
+  {
+    pregunta: '¿Qué garantía tiene?',
+    respuesta: `${equipos.garantiaDetalle.charAt(0).toUpperCase()}${equipos.garantiaDetalle.slice(1)}.`,
+  },
+  {
+    pregunta: '¿Venden el camión?',
+    respuesta:
+      'No. Nosotros fabricamos el equipo. Si usted no tiene camión, le ayudamos a conseguirlo con el concesionario.',
+  },
+  {
+    pregunta: '¿Qué capacidades fabrican?',
+    respuesta: `De ${rango.L[0]} a ${rango.L[1]} litros: unos ${rango.gal[0]} a ${rango.gal[1]} galones. El máximo equivale a unos ${rango.bbl[1]} barriles.`,
+  },
+  {
+    pregunta: '¿En qué materiales?',
+    respuesta: `${materiales.join(' o ').replace('Lámina', 'lámina')}.`,
+  },
+  {
+    pregunta: '¿Atienden fuera de Bogotá?',
+    respuesta: 'Sí. Trabajamos con empresas de todo el país.',
+  },
+  {
+    pregunta: '¿Hacen mantenimiento?',
+    respuesta: `Sí, de bombas de vacío: venta, mantenimiento y repuestos. <a href="${rutas.bombas}">Vea la línea de bombas de vacío</a>.`,
+  },
+];
+---
+<Base
+  titulo="Equipos tipo vactor, minivactor y tanques de vacío | Aliado Industrial"
+  descripcion={`Fabricamos equipos tipo vactor, minivactor y tanques de vacío de ${capacidadTexto}. Precio directo de fábrica, ${equipos.diasFabricacion} días hábiles y garantía de ${equipos.garantia}.`}
+  pagina="equipos"
+  mensajeWA={wa.general}
+  og="/og/equipos.jpg"
+>
+  <!-- 1. Hero -->
+  <Hero
+    antetitulo="Fabricantes · Bogotá, Colombia"
+    mensajeWA={wa.general}
+    datos={[
+      { etiqueta: 'Tiempo de fabricación', valor: `${equipos.diasFabricacion} días hábiles` },
+      { etiqueta: 'Garantía', valor: equipos.garantia },
+      { etiqueta: 'Capacidad', valor: `${rango.L[0]} a ${rango.L[1]} L` },
+      { etiqueta: 'Empresa familiar', valor: `+${site.aniosExperiencia} años en el vacío` },
+    ]}
+  >
+    <Fragment slot="titulo">
+      Fabricamos su <span class="text-rojo-claro">equipo tipo vactor</span> a precio de fábrica
+    </Fragment>
+    <p slot="parrafo">
+      Diseñamos y fabricamos su camión tipo vactor, minivactor o tanque de vacío de {capacidadTexto} para pozos sépticos, trampas de grasa y residuos petroleros. Usted le compra directo al fabricante, sin intermediarios.
+    </p>
+    <div slot="media" class="relative">
+      <Picture
+        src={fotos.hero.src}
+        alt={fotos.hero.alt}
+        widths={[480, 720, 960, 1280, 1600]}
+        sizes="(min-width: 1280px) 620px, (min-width: 1024px) 50vw, 100vw"
+        formats={['avif', 'webp']}
+        loading="eager"
+        fetchpriority="high"
+        class="aspect-[4/3] w-full object-cover sm:aspect-[16/10] lg:aspect-[5/4] lg:[clip-path:polygon(9%_0,100%_0,100%_100%,0_100%)]"
+      />
+      <p class="absolute right-0 bottom-0 bg-carbon/85 px-3 py-1.5 font-mono text-[0.6875rem] tracking-wider text-acero-200 uppercase sm:text-xs">
+        Foto real · equipo fabricado por {site.nombreCorto}
+      </p>
+    </div>
+  </Hero>
+
+  <!-- 2. Para quién -->
+  <section class="bg-carbon py-16 sm:py-24" aria-labelledby="titulo-para-quien">
+    <div class="contenedor">
+      <div class="grid gap-6 lg:grid-cols-[1fr_1.6fr] lg:items-end">
+        <div>
+          <p class="antetitulo text-rojo-claro">¿Le sirve?</p>
+          <h2 id="titulo-para-quien" class="titulo-display mt-3 text-4xl sm:text-5xl lg:text-6xl">Para quién fabricamos</h2>
+        </div>
+        <p class="max-w-2xl text-lg text-acero-200 lg:pb-1">
+          Empresas que prestan servicios de succión en todo el país. Fabricamos para que ese servicio se haga bien y a tiempo.
+        </p>
+      </div>
+      <ul class="mt-12 grid border-t border-acero-700 sm:grid-cols-2">
+        {clientes.map((cl, i) => (
+          <li class:list={['flex gap-5 border-b border-acero-700 py-7 sm:py-9', i % 2 === 0 ? 'sm:border-r sm:pr-8' : 'sm:pl-8']}>
+            <span class="font-mono text-sm text-rojo-claro" aria-hidden="true">0{i + 1}</span>
+            <div>
+              <h3 class="font-display text-3xl leading-none font-extrabold uppercase sm:text-4xl">{cl.titulo}</h3>
+              <p class="mt-3 text-acero-300">{cl.texto}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3. Qué fabricamos -->
+  <section id="que-fabricamos" class="bg-acero-900 py-16 sm:py-24" aria-labelledby="titulo-que-fabricamos">
+    <div class="contenedor">
+      <p class="antetitulo text-rojo-claro">Qué fabricamos</p>
+      <h2 id="titulo-que-fabricamos" class="titulo-display mt-3 max-w-3xl text-4xl sm:text-5xl lg:text-6xl">
+        Tres equipos, hechos a la medida de su operación
+      </h2>
+
+      <div class="mt-12 grid gap-4 lg:grid-cols-[1.35fr_1fr] lg:grid-rows-2 lg:gap-5">
+        <article class="flex flex-col overflow-hidden rounded-sm border border-acero-700 bg-carbon lg:row-span-2">
+          <Image src={fotos.tipoVactor.src} alt={fotos.tipoVactor.alt} widths={[480, 720, 960, 1280]} sizes="(min-width: 1024px) 58vw, 100vw" class="aspect-[16/9] w-full object-cover lg:aspect-auto lg:min-h-0 lg:flex-1" />
+          <div class="p-6 sm:p-8">
+            <p class="font-mono text-sm text-rojo-claro">01</p>
+            <h3 class="titulo-display mt-2 text-4xl sm:text-5xl">Equipo tipo vactor</h3>
+            <p class="mt-3 max-w-xl text-lg text-acero-200">
+              Equipo de succión por vacío montado sobre camión. Lo diseñamos según el tipo de residuo, la capacidad que necesita y el camión que usted tenga.
+            </p>
+            <BotonWhatsApp mensaje={wa.tipoVactor} origen="tarjeta-tipo-vactor" texto="Cotizar equipo tipo vactor" clase="mt-6" />
+          </div>
+        </article>
+
+        <article class="grid overflow-hidden rounded-sm border border-acero-700 bg-carbon sm:grid-cols-[0.9fr_1fr]">
+          <Image src={fotos.minivactor.src} alt={fotos.minivactor.alt} widths={[400, 640, 800]} sizes="(min-width: 1024px) 20vw, (min-width: 640px) 45vw, 100vw" class="aspect-[16/10] h-full w-full object-cover sm:aspect-auto" />
+          <div class="p-6">
+            <p class="font-mono text-sm text-rojo-claro">02</p>
+            <h3 class="titulo-display mt-2 text-4xl">Minivactor</h3>
+            <p class="mt-3 text-acero-200">La versión compacta del equipo tipo vactor.</p>
+            <BotonWhatsApp mensaje={wa.minivactor} origen="tarjeta-minivactor" texto="Cotizar minivactor" variante="secundario" clase="mt-5" />
+          </div>
+        </article>
+
+        <article class="grid overflow-hidden rounded-sm border border-acero-700 bg-carbon sm:grid-cols-[0.9fr_1fr]">
+          <Image src={fotos.tanque.src} alt={fotos.tanque.alt} widths={[400, 640, 800]} sizes="(min-width: 1024px) 20vw, (min-width: 640px) 45vw, 100vw" class="aspect-[16/10] h-full w-full object-cover sm:aspect-auto" />
+          <div class="p-6">
+            <p class="font-mono text-sm text-rojo-claro">03</p>
+            <h3 class="titulo-display mt-2 text-4xl">Tanques de vacío</h3>
+            <p class="mt-3 text-acero-200">Para montar en camión o en otros formatos, como plataformas. En acero inoxidable o lámina de acero.</p>
+            <BotonWhatsApp mensaje={wa.tanque} origen="tarjeta-tanque" texto="Cotizar tanque" variante="secundario" clase="mt-5" />
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Ficha técnica -->
+  <FichaTecnica />
+
+  <!-- 5. Cómo trabajamos -->
+  <Proceso
+    antetitulo="Cómo trabajamos"
+    titulo="De la necesidad al equipo entregado"
+    foto={fotos.soldadura}
+    pasos={[
+      { titulo: 'Nos cuenta qué necesita', texto: 'Tipo de residuo, capacidad y si ya tiene camión.' },
+      { titulo: 'Definimos el diseño', texto: 'Lo definimos con usted y le enviamos la cotización.' },
+      { titulo: 'Fabricamos', texto: `En ${equipos.diasFabricacion} días hábiles.` },
+      { titulo: 'Entregamos', texto: `Con garantía de ${equipos.garantia}.` },
+    ]}
+  />
+
+  <!-- 6. Por qué Aliado -->
+  <section class="bg-carbon py-16 sm:py-24" aria-labelledby="titulo-por-que">
+    <div class="contenedor grid gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-16">
+      <div>
+        <p class="antetitulo text-rojo-claro">Por qué Aliado</p>
+        <h2 id="titulo-por-que" class="titulo-display mt-3 text-4xl sm:text-5xl lg:text-6xl">Le compra al que fabrica</h2>
+        <PrecioDesde />
+      </div>
+      <ol class="space-y-0 border-t border-acero-700">
+        <li class="grid grid-cols-[3rem_1fr] gap-4 border-b border-acero-700 py-7">
+          <span class="chevrones text-3xl" aria-hidden="true">&gt;&gt;</span>
+          <div>
+            <h3 class="text-2xl font-semibold">Precio directo de fábrica, sin intermediarios</h3>
+            <p class="mt-2 text-acero-300">Diseñamos y fabricamos nosotros mismos. Usted habla con quien hace el equipo.</p>
+          </div>
+        </li>
+        <li class="grid grid-cols-[3rem_1fr] gap-4 border-b border-acero-700 py-7">
+          <span class="chevrones text-3xl" aria-hidden="true">&gt;&gt;</span>
+          <div>
+            <h3 class="text-2xl font-semibold">Fabricado a la medida de su operación</h3>
+            <p class="mt-2 text-acero-300">Capacidad, material y aplicación según lo que usted necesita resolver.</p>
+          </div>
+        </li>
+        <li class="grid grid-cols-[3rem_1fr] gap-4 border-b border-acero-700 py-7">
+          <span class="chevrones text-3xl" aria-hidden="true">&gt;&gt;</span>
+          <div>
+            <h3 class="text-2xl font-semibold">Empresa familiar, más de {site.aniosExperiencia} años en el vacío</h3>
+            <p class="mt-2 text-acero-300">
+              También damos mantenimiento y conseguimos repuestos para bombas de vacío.{' '}
+              <a href={rutas.bombas} class="enlace font-semibold text-white">Ver bombas de vacío</a>
+            </p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <Cifras />
+  <Clientes />
+  <Testimonios />
+
+  <!-- Accesorios (resumen) -->
+  <section class="border-y border-acero-700 bg-acero-900 py-8" aria-labelledby="titulo-accesorios-resumen">
+    <div class="contenedor flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div>
+        <h2 id="titulo-accesorios-resumen" class="antetitulo text-rojo-claro">También vendemos accesorios</h2>
+        <p class="mt-2 text-lg text-acero-200">{accesorios.join(' · ')}</p>
+      </div>
+      <a href={`${rutas.bombas}#accesorios`} class="boton boton-secundario shrink-0 self-start lg:self-auto">
+        Ver accesorios <Icono nombre="flecha" />
+      </a>
+    </div>
+  </section>
+
+  <!-- 7. Equipos entregados -->
+  <Galeria
+    antetitulo="Fotos reales"
+    titulo="Equipos entregados y en fabricación"
+    texto="Equipos que hemos fabricado. Ocultamos las placas y los datos de nuestros clientes."
+    fotos={galeria}
+  />
+
+  <!-- 8. Banda cruzada -->
+  <BandaCruzada
+    frase="¿Mantenimiento o repuestos para su bomba de vacío?"
+    detalle="Venta, mantenimiento y repuestos de bombas de vacío. También asesoramos montajes y centrales de vacío."
+    href={rutas.bombas}
+    textoBoton="Ver bombas de vacío"
+  >
+    <div slot="media" class="rejilla absolute inset-0 grid place-items-center bg-carbon p-6 sm:p-10">
+      <BombaVacio clase="h-auto w-full max-w-lg" />
+    </div>
+  </BandaCruzada>
+
+  <!-- 9. Formulario -->
+  <FormularioCotizacion pagina="equipos" mensajeWA={wa.general} />
+
+  <!-- 10. Preguntas frecuentes -->
+  <Faq preguntas={preguntas} />
+
+  <!-- 11. CTA final -->
+  <CtaFinal
+    titulo="Cuéntenos qué necesita"
+    texto={`Tipo de residuo, capacidad y si tiene camión. Con eso le preparamos la cotización de su equipo, fabricado en ${equipos.diasFabricacion} días hábiles.`}
+    mensajeWA={wa.general}
+  />
+</Base>

@@ -1,0 +1,251 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import BandaCruzada from '../components/BandaCruzada.astro';
+import FormularioCotizacion from '../components/FormularioCotizacion.astro';
+import Faq from '../components/Faq.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+import BotonWhatsApp from '../components/BotonWhatsApp.astro';
+import AvisoNoAfiliacion from '../components/AvisoNoAfiliacion.astro';
+import CarruselMarcas from '../components/CarruselMarcas.astro';
+import Icono from '../components/Icono.astro';
+import BombaVacio from '../components/ilustraciones/BombaVacio.astro';
+import Vacuometro from '../components/ilustraciones/Vacuometro.astro';
+import { fotos } from '../assets/fotos';
+import { site, mensajesWA, rutas, accesorios, equipos } from '../config/site';
+import { enlaceWhatsApp } from '../lib/whatsapp';
+import { rangoCapacidad } from '../lib/unidades';
+
+const rango = rangoCapacidad();
+
+const wa = mensajesWA.bombas;
+
+const servicios = [
+  {
+    titulo: 'Venta de bombas de vacío',
+    texto: 'Le ayudamos a elegir la bomba según su aplicación, el caudal y el nivel de vacío que necesita.',
+    mensaje: wa.venta,
+  },
+  {
+    titulo: 'Mantenimiento',
+    texto: 'Mantenimiento de bombas de vacío de anillo líquido, de émbolo giratorio, lubricadas por aceite y autolubricadas.',
+    mensaje: wa.mantenimiento,
+  },
+  {
+    titulo: 'Repuestos',
+    texto: 'Conseguimos repuestos para las marcas que trabajamos. Envíenos la marca y el modelo, o la foto de la placa.',
+    mensaje: wa.repuestos,
+  },
+  {
+    titulo: 'Asesoría en montajes y centrales de vacío',
+    texto: 'Le asesoramos en el montaje de la bomba y en el diseño de centrales de vacío para su proceso.',
+    mensaje: wa.asesoria,
+  },
+];
+
+// Descripciones generales; pendientes de revisión por el cliente (ver PENDIENTES.md).
+const tipos = [
+  {
+    titulo: 'Anillo líquido',
+    texto: 'Un rotor excéntrico gira dentro de un anillo de líquido, normalmente agua, que sella las cámaras. Toleran humedad, vapores y arrastre de líquido.',
+  },
+  {
+    titulo: 'Émbolo giratorio',
+    texto: 'Un pistón montado sobre una excéntrica gira dentro del cilindro y desplaza el gas. Son robustas y manejan caudales grandes en procesos industriales.',
+  },
+  {
+    titulo: 'Lubricadas por aceite',
+    texto: 'El aceite sella, lubrica y refrigera las paletas. Alcanzan un vacío más profundo que una bomba en seco del mismo tamaño.',
+  },
+  {
+    titulo: 'Autolubricadas',
+    texto: 'Trabajan sin aceite en la cámara: las paletas son de un material autolubricante. El aire sale sin neblina de aceite.',
+  },
+];
+
+const preguntas = [
+  {
+    pregunta: '¿Qué tipos de bomba manejan?',
+    respuesta: 'Bombas de vacío de anillo líquido, de émbolo giratorio, lubricadas por aceite y autolubricadas.',
+  },
+  {
+    pregunta: '¿Consiguen repuestos para mi marca?',
+    respuesta:
+      'Escríbanos con la marca y el modelo de su bomba, o envíenos la foto de la placa, y le confirmamos si conseguimos el repuesto.',
+  },
+  {
+    pregunta: '¿Asesoran centrales de vacío?',
+    respuesta: 'Sí. Asesoramos montajes y centrales de vacío. Cuéntenos su proceso y qué equipos tiene.',
+  },
+  {
+    pregunta: '¿Son distribuidores autorizados?',
+    respuesta: `No. ${site.razonSocial} no es distribuidor autorizado ni representante de ninguna de las marcas mencionadas en este sitio. Vendemos bombas y conseguimos repuestos de esas marcas como proveedor independiente.`,
+  },
+];
+---
+<Base
+  titulo="Bombas de vacío: venta, mantenimiento y repuestos | Aliado Industrial"
+  descripcion="Venta y mantenimiento de bombas de vacío, repuestos para bombas de vacío y asesoría en montajes y centrales de vacío. Bogotá, Colombia. Escríbanos por WhatsApp."
+  pagina="bombas"
+  mensajeWA={wa.general}
+  og="/og/bombas.jpg"
+>
+  <!-- 1. Hero -->
+  <Hero
+    antetitulo="Bombas de vacío · Bogotá, Colombia"
+    mensajeWA={wa.general}
+    datos={[
+      { etiqueta: 'Empresa familiar', valor: `+${site.aniosExperiencia} años en el vacío` },
+      { etiqueta: 'Servicios', valor: 'Venta, mantenimiento y repuestos' },
+      { etiqueta: 'Asesoría', valor: 'Centrales de vacío' },
+    ]}
+  >
+    <Fragment slot="titulo">
+      Venta y mantenimiento de <span class="text-rojo-claro">bombas de vacío</span>
+    </Fragment>
+    <p slot="parrafo">
+      Vendemos bombas de vacío, hacemos mantenimiento de bombas de vacío y conseguimos repuestos para bombas de vacío. También le asesoramos en montajes y centrales de vacío.
+    </p>
+    <div slot="media" class="rejilla relative border-y border-acero-700 bg-acero-900 px-4 py-8 sm:px-8 lg:rounded-sm lg:border">
+      <BombaVacio clase="h-auto w-full" />
+      <Vacuometro tono="oscuro" clase="absolute -bottom-6 right-6 size-24 drop-shadow-[0_10px_20px_rgb(0_0_0/0.6)] sm:size-32 lg:-right-6" />
+    </div>
+  </Hero>
+
+  <!-- 2. Servicios -->
+  <section class="bg-carbon py-16 sm:py-24" aria-labelledby="titulo-servicios">
+    <div class="contenedor">
+      <p class="antetitulo text-rojo-claro">Servicios</p>
+      <h2 id="titulo-servicios" class="titulo-display mt-3 max-w-3xl text-4xl sm:text-5xl lg:text-6xl">Lo que hacemos por su bomba</h2>
+      <ul class="mt-12 grid border-t border-acero-700 md:grid-cols-2">
+        {servicios.map((s, i) => (
+          <li class:list={['flex flex-col border-b border-acero-700 py-8', i % 2 === 0 ? 'md:border-r md:pr-10' : 'md:pl-10']}>
+            <span class="font-mono text-sm text-rojo-claro" aria-hidden="true">0{i + 1}</span>
+            <h3 class="mt-2 font-display text-3xl leading-none font-extrabold uppercase sm:text-4xl">{s.titulo}</h3>
+            <p class="mt-3 max-w-md text-acero-300">{s.texto}</p>
+            <a
+              href={enlaceWhatsApp(s.mensaje)}
+              target="_blank"
+              rel="noopener"
+              class="mt-5 inline-flex items-center gap-2 self-start font-semibold text-white underline decoration-rojo decoration-2 underline-offset-4 hover:decoration-white"
+              data-lead="whatsapp"
+              data-origen={`servicio-${i + 1}`}
+            >
+              <Icono nombre="whatsapp" /> Consultar por WhatsApp<span class="sr-only"> (abre WhatsApp en una pestaña nueva)</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3. Tipos de bomba -->
+  <section class="bg-acero-900 py-16 sm:py-24" aria-labelledby="titulo-tipos">
+    <div class="contenedor">
+      <div class="grid gap-6 lg:grid-cols-[1fr_1.5fr] lg:items-end">
+        <div>
+          <p class="antetitulo text-rojo-claro">Tipos de bomba</p>
+          <h2 id="titulo-tipos" class="titulo-display mt-3 text-4xl sm:text-5xl lg:text-6xl">Las bombas que manejamos</h2>
+        </div>
+        <p class="max-w-2xl text-lg text-acero-200 lg:pb-1">Venta y mantenimiento de estos cuatro tipos. Si no sabe cuál tiene, la placa de la bomba nos lo dice.</p>
+      </div>
+      <ol class="mt-12 grid gap-px overflow-hidden rounded-sm border border-acero-700 bg-acero-700 sm:grid-cols-2 lg:grid-cols-4">
+        {tipos.map((t, i) => (
+          <li class="bg-carbon p-6 sm:p-7">
+            <span class="font-mono text-sm text-acero-300" aria-hidden="true">Tipo {String(i + 1).padStart(2, '0')}</span>
+            <h3 class="mt-3 font-display text-3xl leading-none font-extrabold uppercase">{t.titulo}</h3>
+            <p class="mt-3 text-acero-300">{t.texto}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 4. Envíenos la foto de la placa -->
+  <section class="bg-rojo-boton py-14 text-white sm:py-20" aria-labelledby="titulo-placa">
+    <div class="contenedor grid items-center gap-8 lg:grid-cols-[auto_1fr_auto] lg:gap-12">
+      <span class="grid size-20 place-items-center rounded-full border-2 border-white/60 sm:size-24" aria-hidden="true">
+        <Icono nombre="camara" clase="size-10 sm:size-12" />
+      </span>
+      <div>
+        <h2 id="titulo-placa" class="titulo-display text-4xl sm:text-5xl lg:text-6xl">Envíenos la foto de la placa</h2>
+        <p class="mt-3 max-w-2xl text-lg text-white">
+          Tómele una foto a la placa de su bomba y mándela por WhatsApp. Con la marca, el modelo y los datos de la placa le cotizamos el mantenimiento o los repuestos.
+        </p>
+      </div>
+      <BotonWhatsApp mensaje={wa.placa} origen="placa" texto="Enviar foto por WhatsApp" variante="blanco" clase="self-start lg:self-center" />
+    </div>
+  </section>
+
+  <!-- 5. Marcas -->
+  <section id="marcas" class="seccion-clara py-16 sm:py-24" aria-labelledby="titulo-marcas">
+    <div class="contenedor">
+      <div class="grid gap-5 lg:grid-cols-[1fr_1.6fr] lg:items-end lg:gap-16">
+        <div>
+          <p class="antetitulo text-rojo-oscuro">Marcas</p>
+          <h2 id="titulo-marcas" class="titulo-display mt-3 text-4xl sm:text-5xl lg:text-6xl">Marcas que trabajamos</h2>
+        </div>
+        <p class="max-w-md text-lg text-tinta-suave">
+          Vendemos bombas y conseguimos repuestos de estas marcas. ¿La suya no está en la lista? Escríbanos con la marca y el modelo.
+        </p>
+      </div>
+      <div class="mt-10 border-y border-tinta/20 py-8">
+        <CarruselMarcas />
+      </div>
+      <div class="mt-6 max-w-3xl border-l-4 border-tinta pl-4 text-tinta-suave">
+        <AvisoNoAfiliacion />
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Accesorios -->
+  <section id="accesorios" class="bg-carbon py-16 sm:py-24" aria-labelledby="titulo-accesorios">
+    <div class="contenedor grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center lg:gap-16">
+      <div>
+        <p class="antetitulo text-rojo-claro">Accesorios</p>
+        <h2 id="titulo-accesorios" class="titulo-display mt-3 text-4xl sm:text-5xl lg:text-6xl">Acoples, registros y mangueras</h2>
+        <p class="mt-5 max-w-md text-lg text-acero-200">Para su equipo de vacío. Díganos la medida y la cantidad.</p>
+        <BotonWhatsApp mensaje={wa.accesorios} origen="accesorios" texto="Cotizar accesorios" clase="mt-7" />
+      </div>
+      <ul class="border-t border-acero-700">
+        {accesorios.map((a) => (
+          <li class="flex items-center gap-4 border-b border-acero-700 py-4 text-xl font-medium">
+            <span class="chevrones text-xl" aria-hidden="true">&gt;&gt;</span>
+            {a}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 7. Banda cruzada -->
+  <BandaCruzada
+    frase="¿Necesita un equipo tipo vactor o un tanque de vacío?"
+    detalle={`Los fabricamos de ${rango.L[0]} a ${rango.L[1]} litros, en ${equipos.diasFabricacion} días hábiles y con garantía de ${equipos.garantia}. Precio directo de fábrica.`}
+    href={rutas.equipos}
+    textoBoton="Ver equipos tipo vactor y tanques"
+  >
+    <Image
+      slot="media"
+      src={fotos.bandaEquipos.src}
+      alt={fotos.bandaEquipos.alt}
+      widths={[480, 800, 1200]}
+      sizes="(min-width: 768px) 50vw, 100vw"
+      class="absolute inset-0 h-full w-full object-cover"
+    />
+  </BandaCruzada>
+
+  <!-- 8. Formulario -->
+  <FormularioCotizacion pagina="bombas" mensajeWA={wa.general} />
+
+  <!-- 9. Preguntas frecuentes -->
+  <Faq preguntas={preguntas} />
+
+  <!-- 10. CTA final -->
+  <CtaFinal
+    titulo="¿Qué bomba tiene?"
+    texto="Envíenos la marca, el modelo o la foto de la placa, y díganos qué necesita: compra, mantenimiento, repuestos o asesoría."
+    mensajeWA={wa.general}
+  />
+</Base>

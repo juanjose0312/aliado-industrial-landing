@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import BotonWhatsApp from '../components/BotonWhatsApp.astro';
+import Icono from '../components/Icono.astro';
+import Vacuometro from '../components/ilustraciones/Vacuometro.astro';
+import { mensajesWA, rutas } from '../config/site';
+---
+<Base
+  titulo="Página no encontrada | Aliado Industrial"
+  descripcion="La página que busca no existe. Vea nuestros equipos tipo vactor y tanques de vacío o nuestra línea de bombas de vacío."
+  pagina="otra"
+  mensajeWA={mensajesWA.general}
+  noindex
+>
+  <section class="rejilla py-20 sm:py-28">
+    <div class="contenedor grid items-center gap-10 md:grid-cols-[1fr_auto]">
+      <div>
+        <p class="antetitulo text-rojo-claro">Error 404</p>
+        <h1 class="titulo-display mt-3 text-5xl sm:text-7xl">Esta página no existe</h1>
+        <p class="mt-5 max-w-xl text-lg text-acero-200">Puede que el enlace esté mal escrito o que la página ya no esté. Elija una de nuestras líneas o escríbanos.</p>
+        <ul class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <li><a href={rutas.equipos} class="boton boton-secundario w-full">Equipos tipo vactor y tanques <Icono nombre="flecha" /></a></li>
+          <li><a href={rutas.bombas} class="boton boton-secundario w-full">Bombas de vacío <Icono nombre="flecha" /></a></li>
+          <li><BotonWhatsApp mensaje={mensajesWA.general} origen="404" texto="Escribir por WhatsApp" clase="w-full" /></li>
+        </ul>
+      </div>
+      <Vacuometro tono="oscuro" clase="mx-auto size-48 sm:size-64" />
+    </div>
+  </section>
+</Base>

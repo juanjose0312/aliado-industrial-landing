@@ -1,0 +1,22 @@
+---
+/** Testimonios reales (con permiso). Si la lista está vacía, no se renderiza nada. */
+import { opcionales } from '../../config/site';
+const lista = opcionales.testimonios;
+---
+{lista.length > 0 && (
+  <section class="bg-acero-900 py-16" aria-labelledby="titulo-testimonios">
+    <div class="contenedor">
+      <h2 id="titulo-testimonios" class="titulo-display text-4xl sm:text-5xl">Lo que dicen nuestros clientes</h2>
+      <div class="mt-8 grid gap-6 md:grid-cols-2">
+        {lista.map((t) => (
+          <figure class="border-l-4 border-rojo pl-5">
+            <blockquote class="text-lg text-acero-200">“{t.texto}”</blockquote>
+            <figcaption class="mt-3 font-mono text-sm text-acero-300">
+              {t.autor}{t.empresa && <> · {t.empresa}</>}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

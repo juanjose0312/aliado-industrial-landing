@@ -1,0 +1,42 @@
+---
+/** Proceso numerado con chevrons ">>". La foto (opcional) muestra un equipo en fabricación. */
+import { Image } from 'astro:assets';
+import type { Foto } from '../assets/fotos';
+
+interface Props {
+  titulo: string;
+  antetitulo: string;
+  pasos: { titulo: string; texto: string }[];
+  foto?: Foto;
+}
+const { titulo, antetitulo, pasos, foto } = Astro.props;
+---
+<section class="bg-acero-900 py-16 sm:py-24" aria-labelledby="titulo-proceso">
+  <div class="contenedor">
+    <div class="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-end">
+      <div>
+        <p class="antetitulo text-rojo-claro">{antetitulo}</p>
+        <h2 id="titulo-proceso" class="titulo-display mt-3 text-4xl sm:text-5xl lg:text-6xl">{titulo}</h2>
+      </div>
+      {foto && (
+        <figure class="relative hidden lg:block">
+          <Image src={foto.src} alt={foto.alt} widths={[480, 720, 960]} sizes="(min-width: 1280px) 560px, 40vw" class="aspect-[16/8] w-full rounded-sm object-cover" />
+          <figcaption class="absolute bottom-0 left-0 bg-carbon/85 px-3 py-1.5 font-mono text-xs tracking-wider text-acero-200 uppercase">{foto.pie}</figcaption>
+        </figure>
+      )}
+    </div>
+
+    <ol class="mt-12 grid gap-px overflow-hidden rounded-sm border border-acero-700 bg-acero-700 sm:grid-cols-2 lg:grid-cols-4">
+      {pasos.map((paso, i) => (
+        <li class="relative bg-acero-900 p-6 sm:p-7">
+          <div class="flex items-center gap-3">
+            <span class="font-display text-6xl leading-none font-extrabold text-white/90">{String(i + 1).padStart(2, '0')}</span>
+            {i < pasos.length - 1 && <span class="chevrones text-2xl" aria-hidden="true">&gt;&gt;</span>}
+          </div>
+          <h3 class="mt-4 text-xl font-semibold">{paso.titulo}</h3>
+          <p class="mt-2 text-acero-300">{paso.texto}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

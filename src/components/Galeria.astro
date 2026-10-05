@@ -1,0 +1,108 @@
+---
+/**
+ * Galería de fotos reales con lightbox accesible (<dialog> nativo):
+ * teclado, Escape para cerrar, flechas para navegar y devolución del foco.
+ */
+import { Image, getImage } from 'astro:assets';
+import Icono from './Icono.astro';
+import type { Foto } from '../assets/fotos';
+
+interface Props {
+  titulo: string;
+  antetitulo: string;
+  texto: string;
+  fotos: Foto[];
+}
+const { titulo, antetitulo, texto, fotos } = Astro.props;
+
+// Versiones grandes para el lightbox (WebP en varios anchos).
+const grandes = await Promise.all(
+  fotos.map(async (f) => {
+    const img = await getImage({ src: f.src, widths: [800, 1280, 1920], format: 'webp', sizes: '100vw' });
+    return { src: img.src, srcset: img.srcSet.attribute, ancho: f.src.width, alto: f.src.height };
+  }),
+);
+const etiquetaEstado = { terminado: 'Terminado', fabricacion: 'En fabricación' } as const;
+
+// Celdas dobles para que la cuadrícula cierre sin huecos con 14 fotos en 2, 3 y 4 columnas.
+const celda = (i: number, total: number): string => {
+  if (i === 0) return 'col-span-2 row-span-2 aspect-square';
+  if (i === 9) return 'aspect-square md:col-span-2 md:aspect-[2/1]';
+  if (i === 5) return 'aspect-square lg:col-span-2 lg:aspect-[2/1]';
+  if (i === total - 1) return 'col-span-2 aspect-[2/1] md:col-span-1 md:aspect-square lg:col-span-2 lg:aspect-[2/1]';
+  return 'aspect-square';
+};
+---
+<section id="equipos-entregados" class="bg-carbon py-16 sm:py-24" aria-labelledby="titulo-galeria" data-galeria>
+  <div class="contenedor">
+    <div class="max-w-3xl">
+      <p class="antetitulo text-rojo-claro">{antetitulo}</p>
+      <h2 id="titulo-galeria" class="titulo-display mt-3 text-4xl sm:text-5xl lg:text-6xl">{titulo}</h2>
+      <p class="mt-4 text-lg text-acero-200">{texto}</p>
+    </div>
+
+    <ul class="mt-10 grid grid-flow-dense grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-4">
+      {fotos.map((foto, i) => (
+        <li class={celda(i, fotos.length)}>
+          <button
+            type="button"
+            class="group relative block h-full w-full overflow-hidden rounded-sm bg-acero-800"
+            data-indice={i}
+            data-src={grandes[i].src}
+            data-srcset={grandes[i].srcset}
+            data-ancho={grandes[i].ancho}
+            data-alto={grandes[i].alto}
+            data-alt={foto.alt}
+            data-pie={`${etiquetaEstado[foto.estado]} · ${foto.pie}`}
+          >
+            <span class="sr-only">Ampliar foto: {foto.alt}</span>
+            <Image
+              src={foto.src}
+              alt=""
+              widths={i === 0 ? [400, 640, 900, 1200] : [300, 480, 720]}
+              sizes={i === 0 ? '(min-width: 1024px) 50vw, 100vw' : '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw'}
+              class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+            />
+            <span class="absolute bottom-0 left-0 bg-carbon/85 px-2 py-1 font-mono text-[0.6875rem] tracking-wider text-white uppercase sm:text-xs" aria-hidden="true">
+              {etiquetaEstado[foto.estado]}
+            </span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <dialog
+    class="m-auto h-dvh max-h-none w-screen max-w-none bg-transparent p-0 text-white backdrop:bg-black/90"
+    aria-label="Foto ampliada"
+  >
+    <div class="flex h-full flex-col">
+      <div class="flex items-center justify-between gap-4 px-4 py-3">
+        <p class="font-mono text-sm text-acero-200" data-lightbox-contador></p>
+        <button type="button" class="grid size-12 place-items-center rounded-full bg-white/10 hover:bg-white/20" data-lightbox-cerrar autofocus>
+          <Icono nombre="cerrar" clase="size-6" />
+          <span class="sr-only">Cerrar</span>
+        </button>
+      </div>
+      <figure class="flex min-h-0 flex-1 flex-col items-center justify-center px-2 sm:px-16">
+        <img data-lightbox-img alt="" class="max-h-full w-auto max-w-full object-contain" decoding="async" />
+        <figcaption class="px-4 py-3 text-center text-[0.9375rem] text-acero-200" data-lightbox-pie></figcaption>
+      </figure>
+      <div class="flex justify-center gap-4 pb-6 sm:pointer-events-none sm:absolute sm:inset-x-4 sm:top-1/2 sm:-translate-y-1/2 sm:justify-between sm:pb-0">
+        <button type="button" class="grid size-12 place-items-center rounded-full bg-white/10 hover:bg-white/20 sm:pointer-events-auto" data-lightbox-anterior>
+          <Icono nombre="anterior" clase="size-6" />
+          <span class="sr-only">Foto anterior</span>
+        </button>
+        <button type="button" class="grid size-12 place-items-center rounded-full bg-white/10 hover:bg-white/20 sm:pointer-events-auto" data-lightbox-siguiente>
+          <Icono nombre="siguiente" clase="size-6" />
+          <span class="sr-only">Foto siguiente</span>
+        </button>
+      </div>
+    </div>
+  </dialog>
+</section>
+
+<script>
+  import { iniciarGaleria } from '../scripts/galeria';
+  iniciarGaleria();
+</script>

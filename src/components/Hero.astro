@@ -1,0 +1,52 @@
+---
+/**
+ * Hero de cada landing. El H1 va en el slot "titulo"; la foto o composición, en el slot "media".
+ */
+import BotonWhatsApp from './BotonWhatsApp.astro';
+import BotonLlamar from './BotonLlamar.astro';
+import FranjaDatos from './FranjaDatos.astro';
+import CintaReflectiva from './CintaReflectiva.astro';
+import { contacto } from '../config/site';
+import { enlaceTelefono } from '../lib/whatsapp';
+
+interface Props {
+  antetitulo: string;
+  mensajeWA: string;
+  datos: { etiqueta: string; valor: string }[];
+}
+const { antetitulo, mensajeWA, datos } = Astro.props;
+---
+<section class="relative overflow-hidden bg-carbon" aria-labelledby="titulo-principal">
+  <div class="rejilla absolute inset-0" aria-hidden="true"></div>
+  <div class="relative contenedor grid items-center gap-8 pt-8 pb-0 sm:pt-12 lg:grid-cols-12 lg:gap-10 lg:pt-14 lg:pb-14">
+    <div class="lg:col-span-6">
+      <p class="antetitulo flex items-center gap-2 text-rojo-claro">
+        <span class="chevrones text-lg" aria-hidden="true">&gt;&gt;</span>
+        {antetitulo}
+      </p>
+      <h1 id="titulo-principal" class="titulo-display mt-4 text-[2.625rem] xs:text-[3.125rem] sm:text-6xl lg:text-[4.1rem] xl:text-[4.6rem]">
+        <slot name="titulo" />
+      </h1>
+      <div class="mt-5 max-w-xl text-lg leading-relaxed text-acero-200 sm:text-xl">
+        <slot name="parrafo" />
+      </div>
+      <div class="mt-7 flex flex-col gap-3 xs:flex-row xs:flex-wrap">
+        <BotonWhatsApp mensaje={mensajeWA} origen="hero" />
+        <BotonLlamar origen="hero" texto="Llamar" />
+      </div>
+      <p class="mt-4 text-[0.9375rem] text-acero-300">
+        WhatsApp y llamadas:{' '}
+        <a href={enlaceTelefono} class="font-mono text-white underline-offset-4 hover:underline" data-lead="llamada" data-origen="hero-numero">
+          {contacto.telefonoVisible}
+        </a>
+      </p>
+    </div>
+    <div class="-mx-4 sm:-mx-6 lg:col-span-6 lg:mx-0">
+      <slot name="media" />
+    </div>
+  </div>
+  <div class="relative">
+    <FranjaDatos items={datos} />
+    <CintaReflectiva />
+  </div>
+</section>

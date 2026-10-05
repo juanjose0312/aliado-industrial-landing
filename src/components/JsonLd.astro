@@ -1,0 +1,45 @@
+---
+/**
+ * JSON-LD con los datos de site.ts.
+ * Organization mientras la dirección esté pendiente; LocalBusiness con dirección cuando se confirme.
+ */
+import { site, contacto, redes, pendientes } from '../config/site';
+
+const direccionConfirmada = !pendientes.direccion.falta;
+const logo = new URL('/icon-512.png', site.url).href;
+
+const datos: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': direccionConfirmada ? 'LocalBusiness' : 'Organization',
+  '@id': `${site.url}/#empresa`,
+  name: site.nombreCorto,
+  legalName: site.razonSocial,
+  url: site.url,
+  logo,
+  image: logo,
+  telephone: contacto.telefonoE164,
+  email: contacto.correo,
+  sameAs: [redes.facebook],
+  areaServed: { '@type': 'Country', name: 'Colombia' },
+  address: direccionConfirmada
+    ? {
+        '@type': 'PostalAddress',
+        streetAddress: contacto.direccion.calle,
+        addressLocality: contacto.direccion.ciudad,
+        addressRegion: contacto.direccion.region,
+        addressCountry: contacto.direccion.pais,
+      }
+    : { '@type': 'PostalAddress', addressLocality: site.ciudad, addressCountry: 'CO' },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: contacto.telefonoE164,
+    email: contacto.correo,
+    contactType: 'sales',
+    areaServed: 'CO',
+    availableLanguage: 'es',
+  },
+};
+if (site.nit) datos.taxID = site.nit;
+if (direccionConfirmada && contacto.horario) datos.openingHours = contacto.horario;
+---
+<script type="application/ld+json" set:html={JSON.stringify(datos)} />

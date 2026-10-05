@@ -1,0 +1,11 @@
+---
+import { avisoNoAfiliacion } from '../config/site';
+
+interface Props {
+  clase?: string;
+}
+const { clase = '' } = Astro.props;
+---
+<p class:list={['text-sm leading-relaxed', clase]} data-aviso-no-afiliacion>
+  {avisoNoAfiliacion}
+</p>

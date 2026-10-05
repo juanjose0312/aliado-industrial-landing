@@ -1,0 +1,89 @@
+---
+import { Image } from 'astro:assets';
+import CintaReflectiva from './CintaReflectiva.astro';
+import AvisoNoAfiliacion from './AvisoNoAfiliacion.astro';
+import Icono from './Icono.astro';
+import logo from '../assets/logo/logo.png';
+import { site, contacto, redes, rutas, pendientes, mensajesWA } from '../config/site';
+import { enlaceWhatsApp, enlaceTelefono } from '../lib/whatsapp';
+
+const direccionConfirmada = !pendientes.direccion.falta;
+const anio = new Date().getFullYear();
+---
+<footer class="bg-acero-950 text-acero-200">
+  <CintaReflectiva />
+  <div class="contenedor grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr] lg:gap-14">
+    <div>
+      <Image src={logo} alt={site.razonSocial} width={176} height={156} class="h-auto w-40" />
+      <p class="mt-5 max-w-sm text-[0.9375rem]">
+        Diseñamos y fabricamos equipos tipo vactor, minivactor y tanques de vacío. Venta, mantenimiento y repuestos de bombas de vacío.
+      </p>
+      <p class="mt-3 text-[0.9375rem]">{site.ciudad}, {site.pais}. Trabajamos con empresas de todo el país.</p>
+    </div>
+
+    <nav aria-label="Líneas de negocio (pie de página)">
+      <h2 class="antetitulo text-acero-300">Nuestras líneas</h2>
+      <ul class="mt-4 space-y-3">
+        <li>
+          <a href={rutas.equipos} class="group flex items-center gap-2 font-display text-2xl leading-tight font-extrabold text-white uppercase hover:text-rojo-claro">
+            Equipos tipo vactor y tanques
+            <Icono nombre="flecha" clase="size-5 shrink-0 transition-transform group-hover:translate-x-1" />
+          </a>
+        </li>
+        <li>
+          <a href={rutas.bombas} class="group flex items-center gap-2 font-display text-2xl leading-tight font-extrabold text-white uppercase hover:text-rojo-claro">
+            Bombas de vacío
+            <Icono nombre="flecha" clase="size-5 shrink-0 transition-transform group-hover:translate-x-1" />
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="antetitulo text-acero-300">Contacto</h2>
+      <ul class="mt-4 space-y-3 text-[0.9375rem]">
+        <li>
+          <a href={enlaceTelefono} class="flex items-center gap-3 hover:text-white" data-lead="llamada" data-origen="footer">
+            <Icono nombre="telefono" clase="size-5 shrink-0 text-rojo-claro" />
+            <span>Teléfono: <span class="font-mono text-white">{contacto.telefonoVisibleIntl}</span></span>
+          </a>
+        </li>
+        <li>
+          <a href={enlaceWhatsApp(mensajesWA.general)} target="_blank" rel="noopener" class="flex items-center gap-3 hover:text-white" data-lead="whatsapp" data-origen="footer">
+            <Icono nombre="whatsapp" clase="size-5 shrink-0 text-rojo-claro" />
+            <span>WhatsApp: <span class="font-mono text-white">{contacto.telefonoVisibleIntl}</span><span class="sr-only"> (abre WhatsApp en una pestaña nueva)</span></span>
+          </a>
+        </li>
+        <li>
+          <a href={`mailto:${contacto.correo}`} class="flex items-center gap-3 break-all hover:text-white">
+            <Icono nombre="correo" clase="size-5 shrink-0 text-rojo-claro" />
+            {contacto.correo}
+          </a>
+        </li>
+        <li>
+          <a href={redes.facebook} target="_blank" rel="noopener" class="flex items-center gap-3 hover:text-white">
+            <Icono nombre="facebook" clase="size-5 shrink-0 text-rojo-claro" />
+            Facebook<span class="sr-only"> (se abre en una pestaña nueva)</span>
+          </a>
+        </li>
+        {direccionConfirmada && (
+          <li class="flex items-start gap-3">
+            <Icono nombre="ubicacion" clase="mt-0.5 size-5 shrink-0 text-rojo-claro" />
+            <span>{contacto.direccion.calle}, {contacto.direccion.ciudad}</span>
+          </li>
+        )}
+        {contacto.horario && <li>Horario: {contacto.horario}</li>}
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-acero-700">
+    <div class="contenedor space-y-4 py-8 text-acero-300">
+      <AvisoNoAfiliacion clase="max-w-4xl" />
+      <p class="text-sm">
+        © {anio} {site.razonSocial}{site.nit && <> · NIT {site.nit}</>} ·{' '}
+        <a href={rutas.politica} class="enlace hover:text-white">Política de tratamiento de datos</a>
+      </p>
+    </div>
+  </div>
+</footer>

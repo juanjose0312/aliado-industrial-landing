@@ -1,0 +1,209 @@
+---
+/**
+ * Formulario de cotización → POST /api/lead → Google Sheets.
+ * Para quien no quiere escribir ni llamar en este momento. WhatsApp y llamada siguen visibles.
+ */
+import Icono from './Icono.astro';
+import BotonWhatsApp from './BotonWhatsApp.astro';
+import BotonLlamar from './BotonLlamar.astro';
+import { contacto, rutas, textoConsentimiento } from '../config/site';
+import { enlaceWhatsApp, enlaceTelefono } from '../lib/whatsapp';
+import {
+  opcionesTipoEquipo,
+  opcionesCamion,
+  opcionesNecesidad,
+  HONEYPOT,
+  LIMITES,
+  type Pagina,
+} from '../lib/validacion';
+
+interface Props {
+  pagina: Pagina;
+  mensajeWA: string;
+}
+const { pagina, mensajeWA } = Astro.props;
+const id = `cotizacion-${pagina}`;
+const c = (nombre: string) => `${id}-${nombre}`;
+
+const claseControl =
+  'mt-1.5 block w-full rounded-[3px] border-2 border-tinta/35 bg-white px-3.5 py-3 text-[1.0625rem] text-tinta placeholder:text-tinta-suave/70 hover:border-tinta/60 focus:border-tinta focus:outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-rojo-oscuro aria-invalid:border-rojo-oscuro';
+const claseEtiqueta = 'block text-[0.9375rem] font-semibold';
+const claseError = 'mt-1.5 flex items-start gap-1.5 text-[0.9375rem] font-medium text-rojo-oscuro';
+const obligatorio = '<span class="text-rojo-oscuro" aria-hidden="true"> *</span>';
+---
+<section id="cotizar" class="seccion-clara border-t-8 border-rojo py-16 sm:py-24" aria-labelledby={`${id}-titulo`}>
+  <div class="contenedor grid gap-10 lg:grid-cols-[1fr_1.35fr] lg:gap-16">
+    <div>
+      <p class="antetitulo text-rojo-oscuro">Formulario de cotización</p>
+      <h2 id={`${id}-titulo`} class="titulo-display mt-3 text-4xl sm:text-5xl lg:text-6xl">
+        {pagina === 'equipos' ? 'Pida su cotización' : 'Cuéntenos qué necesita'}
+      </h2>
+      <p class="mt-5 max-w-md text-lg text-tinta-suave">
+        Déjenos sus datos y le contactamos por WhatsApp o por llamada. Si prefiere hablar ahora, escríbanos o llámenos directamente.
+      </p>
+      <div class="mt-7 flex flex-col gap-3 sm:max-w-sm">
+        <BotonWhatsApp mensaje={mensajeWA} origen="formulario-lateral" />
+        <BotonLlamar origen="formulario-lateral" />
+      </div>
+      <p class="mt-4 text-[0.9375rem] text-tinta-suave">
+        Correo: <a href={`mailto:${contacto.correo}`} class="enlace font-medium text-tinta">{contacto.correo}</a>
+      </p>
+    </div>
+
+    <div class="rounded-sm border-2 border-tinta/15 bg-white p-5 shadow-[0_24px_50px_-30px_rgb(0_0_0/0.35)] sm:p-8" data-bloque-formulario>
+      <form id={id} data-formulario-lead data-pagina={pagina} novalidate class="grid gap-5 sm:grid-cols-2">
+        <p class="text-sm text-tinta-suave sm:col-span-2">Los campos con <span class="text-rojo-oscuro">*</span> son obligatorios.</p>
+
+        <div>
+          <label for={c('nombre')} class={claseEtiqueta}>Nombre<Fragment set:html={obligatorio} /></label>
+          <input id={c('nombre')} name="nombre" type="text" autocomplete="name" required maxlength={LIMITES.nombre} aria-describedby={`${c('nombre')}-error`} class={claseControl} />
+          <p id={`${c('nombre')}-error`} class={claseError} data-error-para="nombre" hidden></p>
+        </div>
+
+        <div>
+          <label for={c('empresa')} class={claseEtiqueta}>Empresa <span class="font-normal text-tinta-suave">(opcional)</span></label>
+          <input id={c('empresa')} name="empresa" type="text" autocomplete="organization" maxlength={LIMITES.empresa} aria-describedby={`${c('empresa')}-error`} class={claseControl} />
+          <p id={`${c('empresa')}-error`} class={claseError} data-error-para="empresa" hidden></p>
+        </div>
+
+        <div>
+          <label for={c('celular')} class={claseEtiqueta}>Celular / WhatsApp<Fragment set:html={obligatorio} /></label>
+          <input
+            id={c('celular')}
+            name="celular"
+            type="tel"
+            inputmode="tel"
+            autocomplete="tel-national"
+            required
+            maxlength={LIMITES.celular}
+            placeholder="300 123 4567"
+            aria-describedby={`${c('celular')}-ayuda ${c('celular')}-error`}
+            class={claseControl}
+          />
+          <p id={`${c('celular')}-ayuda`} class="mt-1 text-sm text-tinta-suave">10 dígitos. Puede incluir +57.</p>
+          <p id={`${c('celular')}-error`} class={claseError} data-error-para="celular" hidden></p>
+        </div>
+
+        <div>
+          <label for={c('ciudad')} class={claseEtiqueta}>Ciudad<Fragment set:html={obligatorio} /></label>
+          <input id={c('ciudad')} name="ciudad" type="text" autocomplete="address-level2" required maxlength={LIMITES.ciudad} aria-describedby={`${c('ciudad')}-error`} class={claseControl} />
+          <p id={`${c('ciudad')}-error`} class={claseError} data-error-para="ciudad" hidden></p>
+        </div>
+
+        {pagina === 'equipos' ? (
+          <>
+            <div>
+              <label for={c('tipoEquipo')} class={claseEtiqueta}>Tipo de equipo<Fragment set:html={obligatorio} /></label>
+              <select id={c('tipoEquipo')} name="tipoEquipo" required aria-describedby={`${c('tipoEquipo')}-error`} class={claseControl}>
+                <option value="">Elija una opción</option>
+                {opcionesTipoEquipo.map((o) => <option value={o.valor}>{o.etiqueta}</option>)}
+              </select>
+              <p id={`${c('tipoEquipo')}-error`} class={claseError} data-error-para="tipoEquipo" hidden></p>
+            </div>
+            <div>
+              <label for={c('capacidad')} class={claseEtiqueta}>Capacidad aproximada <span class="font-normal text-tinta-suave">(opcional)</span></label>
+              <input id={c('capacidad')} name="capacidad" type="text" maxlength={LIMITES.capacidad} placeholder="Ej.: 8.000 litros o 2.000 galones" aria-describedby={`${c('capacidad')}-error`} class={claseControl} />
+              <p id={`${c('capacidad')}-error`} class={claseError} data-error-para="capacidad" hidden></p>
+            </div>
+            <fieldset class="sm:col-span-2" aria-describedby={`${c('camion')}-error`}>
+              <legend class={claseEtiqueta}>¿Tiene camión? <span class="font-normal text-tinta-suave">(opcional)</span></legend>
+              <div class="mt-2 grid gap-2 sm:grid-cols-2">
+                {opcionesCamion.map((o) => (
+                  <label class="flex min-h-12 cursor-pointer items-center gap-3 rounded-[3px] border-2 border-tinta/25 px-3.5 py-2.5 has-checked:border-tinta has-checked:bg-niebla">
+                    <input type="radio" name="camion" value={o.valor} class="size-5 accent-rojo-oscuro" />
+                    <span>{o.etiqueta}</span>
+                  </label>
+                ))}
+              </div>
+              <p id={`${c('camion')}-error`} class={claseError} data-error-para="camion" hidden></p>
+            </fieldset>
+          </>
+        ) : (
+          <>
+            <div>
+              <label for={c('necesidad')} class={claseEtiqueta}>¿Qué necesita?<Fragment set:html={obligatorio} /></label>
+              <select id={c('necesidad')} name="necesidad" required aria-describedby={`${c('necesidad')}-error`} class={claseControl}>
+                <option value="">Elija una opción</option>
+                {opcionesNecesidad.map((o) => <option value={o.valor}>{o.etiqueta}</option>)}
+              </select>
+              <p id={`${c('necesidad')}-error`} class={claseError} data-error-para="necesidad" hidden></p>
+            </div>
+            <div>
+              <label for={c('marcaModelo')} class={claseEtiqueta}>Marca y modelo de la bomba <span class="font-normal text-tinta-suave">(opcional)</span></label>
+              <input id={c('marcaModelo')} name="marcaModelo" type="text" maxlength={LIMITES.marcaModelo} aria-describedby={`${c('marcaModelo')}-error`} class={claseControl} />
+              <p id={`${c('marcaModelo')}-error`} class={claseError} data-error-para="marcaModelo" hidden></p>
+            </div>
+          </>
+        )}
+
+        <div class="sm:col-span-2">
+          <label for={c('mensaje')} class={claseEtiqueta}>Mensaje <span class="font-normal text-tinta-suave">(opcional)</span></label>
+          <textarea id={c('mensaje')} name="mensaje" rows="4" maxlength={LIMITES.mensaje} aria-describedby={`${c('mensaje')}-error`} class={claseControl}></textarea>
+          <p id={`${c('mensaje')}-error`} class={claseError} data-error-para="mensaje" hidden></p>
+        </div>
+
+        <!-- Campo trampa para bots: las personas no lo ven ni lo alcanzan con el teclado -->
+        <div class="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+          <label for={c(HONEYPOT)}>No llene este campo</label>
+          <input id={c(HONEYPOT)} name={HONEYPOT} type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="sm:col-span-2">
+          <label class="flex cursor-pointer items-start gap-3 text-[0.9375rem] leading-snug">
+            <input type="checkbox" name="consentimiento" required aria-describedby={`${c('consentimiento')}-error`} class="mt-0.5 size-5 shrink-0 accent-rojo-oscuro" />
+            <span>
+              {textoConsentimiento.replace('Política de tratamiento de datos.', '')}
+              <a href={rutas.politica} class="enlace font-semibold text-rojo-oscuro" target="_blank" rel="noopener">Política de tratamiento de datos<span class="sr-only"> (se abre en una pestaña nueva)</span></a>.<Fragment set:html={obligatorio} />
+            </span>
+          </label>
+          <p id={`${c('consentimiento')}-error`} class={claseError} data-error-para="consentimiento" hidden></p>
+        </div>
+
+        <div class="sm:col-span-2">
+          <button type="submit" class="boton boton-primario w-full disabled:cursor-wait disabled:opacity-80 sm:w-auto sm:min-w-64">
+            <span data-texto>Enviar solicitud</span>
+            <span data-cargando hidden class="flex items-center gap-2">
+              <svg class="size-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity="0.3" stroke-width="3" /><path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round" /></svg>
+              Enviando…
+            </span>
+          </button>
+        </div>
+
+        <div data-estado-error hidden tabindex="-1" role="alert" class="rounded-[3px] border-2 border-rojo-oscuro bg-rojo-oscuro/5 p-4 sm:col-span-2">
+          <p class="flex items-center gap-2 font-semibold text-rojo-oscuro">
+            <Icono nombre="alerta" />
+            No pudimos enviar su solicitud.
+          </p>
+          <p class="mt-1">Inténtelo de nuevo o contáctenos directamente:</p>
+          <div class="mt-3 flex flex-wrap gap-3">
+            <a href={enlaceWhatsApp(mensajeWA)} target="_blank" rel="noopener" class="boton boton-primario min-h-11! py-2!" data-lead="whatsapp" data-origen="formulario-error">
+              <Icono nombre="whatsapp" /> Escribir por WhatsApp<span class="sr-only"> (abre WhatsApp en una pestaña nueva)</span>
+            </a>
+            <a href={enlaceTelefono} class="boton boton-secundario-claro min-h-11! py-2!" data-lead="llamada" data-origen="formulario-error">
+              <Icono nombre="telefono" /> Llamar al {contacto.telefonoVisible}
+            </a>
+          </div>
+        </div>
+      </form>
+
+      <div data-estado-exito hidden tabindex="-1" class="py-4 outline-none" role="status">
+        <span class="grid size-14 place-items-center rounded-full bg-tinta text-white">
+          <Icono nombre="check" clase="size-7" />
+        </span>
+        <h3 class="titulo-display mt-5 text-4xl">Solicitud recibida, <span data-nombre></span></h3>
+        <p class="mt-3 text-lg text-tinta-suave">
+          Ya tenemos sus datos. Si quiere adelantar la cotización, envíenos el mismo resumen por WhatsApp.
+        </p>
+        <a href={enlaceWhatsApp(mensajeWA)} target="_blank" rel="noopener" class="boton boton-primario mt-6" data-lead="whatsapp" data-origen="formulario-exito" data-wa-resumen>
+          <Icono nombre="whatsapp" />
+          Continuar por WhatsApp<span class="sr-only"> (abre WhatsApp en una pestaña nueva)</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { iniciarFormularios } from '../scripts/formulario';
+  iniciarFormularios();
+</script>

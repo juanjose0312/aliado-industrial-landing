@@ -1,0 +1,21 @@
+---
+/** Botón flotante de WhatsApp para tableta y escritorio. */
+import Icono from './Icono.astro';
+import { enlaceWhatsApp } from '../lib/whatsapp';
+
+interface Props {
+  mensajeWA: string;
+}
+const { mensajeWA } = Astro.props;
+---
+<a
+  href={enlaceWhatsApp(mensajeWA)}
+  target="_blank"
+  rel="noopener"
+  class="fixed right-5 bottom-5 z-50 hidden items-center gap-2 rounded-full bg-rojo-boton py-3.5 pr-5 pl-4 font-semibold text-white shadow-[0_10px_30px_-8px_rgb(0_0_0/0.6)] ring-2 ring-white/10 transition-colors hover:bg-rojo-boton-hover md:flex"
+  data-lead="whatsapp"
+  data-origen="flotante"
+>
+  <Icono nombre="whatsapp" clase="size-6" />
+  <span>WhatsApp<span class="sr-only"> (abre WhatsApp en una pestaña nueva)</span></span>
+</a>

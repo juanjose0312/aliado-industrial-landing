@@ -1,0 +1,12 @@
+---
+/** Precio "desde" confirmado por el cliente. null = no se muestra. */
+import { opcionales } from '../../config/site';
+const precio = opcionales.precioDesde;
+---
+{precio && (
+  <p class="mt-6 inline-flex flex-wrap items-baseline gap-x-3 border-l-4 border-rojo pl-4">
+    <span class="antetitulo text-acero-300">Desde</span>
+    <span class="font-display text-4xl font-extrabold">{precio.valor}</span>
+    <span class="text-acero-300">{precio.detalle}</span>
+  </p>
+)}

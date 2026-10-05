@@ -1,0 +1,120 @@
+---
+/**
+ * Ficha técnica con estética de placa de especificaciones remachada.
+ * Capacidad en litros, galones o barriles (selector sin recargar).
+ */
+import Vacuometro from './ilustraciones/Vacuometro.astro';
+import BotonWhatsApp from './BotonWhatsApp.astro';
+import { equipos, materiales, mensajesWA, site } from '../config/site';
+import { rangoCapacidad, nombresUnidad, type Unidad } from '../lib/unidades';
+
+const rango = rangoCapacidad();
+const nombres = Object.fromEntries(Object.entries(nombresUnidad).map(([k, v]) => [k, v.largo]));
+const unidades: { clave: Unidad; texto: string }[] = [
+  { clave: 'L', texto: 'Litros' },
+  { clave: 'gal', texto: 'Galones' },
+  { clave: 'bbl', texto: 'Barriles' },
+];
+---
+<section id="ficha-tecnica" class="seccion-clara py-16 sm:py-24" aria-labelledby="titulo-ficha">
+  <div class="contenedor grid gap-10 lg:grid-cols-[1fr_1.5fr] lg:items-center lg:gap-16">
+    <div>
+      <p class="antetitulo text-rojo-oscuro">Ficha técnica</p>
+      <h2 id="titulo-ficha" class="titulo-display mt-3 text-4xl sm:text-5xl lg:text-6xl">Los datos, antes de cotizar</h2>
+      <p class="mt-5 max-w-md text-lg text-tinta-suave">
+        Capacidad, material, tiempo de fabricación y garantía, por escrito. Cada equipo se define con usted según el residuo y el camión.
+      </p>
+      <BotonWhatsApp mensaje={mensajesWA.equipos.ficha} origen="ficha-tecnica" texto="Cotizar con mi capacidad" clase="mt-7" />
+    </div>
+
+    <div
+      class="placa px-5 pt-9 pb-8 sm:px-9 sm:pt-11 sm:pb-10"
+      data-ficha
+      data-rango={JSON.stringify(rango)}
+      data-nombres={JSON.stringify(nombres)}
+    >
+      <span class="remache top-3 left-3"></span>
+      <span class="remache top-3 right-3"></span>
+      <span class="remache bottom-3 left-3"></span>
+      <span class="remache right-3 bottom-3"></span>
+
+      <div class="flex items-start justify-between gap-4 border-b-2 border-tinta/70 pb-3">
+        <p class="font-mono text-[0.75rem] leading-snug tracking-[0.12em] uppercase sm:text-[0.8125rem]">
+          {site.razonSocial}<br />
+          <span class="text-tinta-suave">Equipos tipo vactor · minivactor · tanques</span>
+        </p>
+        <Vacuometro clase="-mt-4 size-20 shrink-0 sm:-mt-6 sm:size-28" />
+      </div>
+
+      <dl class="grid grid-cols-2 font-mono">
+        <div class="col-span-2 border-b border-tinta/25 py-5">
+          <dt class="text-[0.8125rem] tracking-[0.12em] text-tinta-suave uppercase">Capacidad</dt>
+          <dd class="mt-1">
+            <p class="flex flex-wrap items-baseline gap-x-3" aria-live="polite">
+              <span class="font-display text-[2.6rem] leading-none font-extrabold xs:text-5xl sm:text-6xl">
+                <span data-capacidad-min>{rango.L[0]}</span>–<span data-capacidad-max>{rango.L[1]}</span>
+              </span>
+              <span class="text-lg" data-capacidad-unidad>litros</span>
+            </p>
+            <div class="mt-4 inline-flex rounded border-2 border-tinta/70" role="group" aria-label="Ver la capacidad en" data-selector-unidades>
+              {unidades.map((u, i) => (
+                <button
+                  type="button"
+                  data-unidad={u.clave}
+                  aria-pressed={i === 0 ? 'true' : 'false'}
+                  class:list={[
+                    'min-h-11 px-3.5 text-sm font-medium tracking-wide uppercase transition-colors aria-pressed:bg-tinta aria-pressed:text-white sm:px-4',
+                    i > 0 && 'border-l-2 border-tinta/70',
+                  ]}
+                >
+                  {u.texto}
+                </button>
+              ))}
+            </div>
+            <p class="mt-3 font-sans text-sm text-tinta-suave">
+              1 galón = {equipos.litrosPorGalon.toLocaleString('es-CO')} L · 1 barril = {equipos.litrosPorBarril} L. Cifras aproximadas.
+            </p>
+          </dd>
+        </div>
+
+          <div class="border-r border-b border-tinta/25 py-5 pr-4">
+            <dt class="text-[0.8125rem] tracking-[0.12em] text-tinta-suave uppercase">Fabricación</dt>
+            <dd class="mt-1">
+              <span class="font-display text-5xl leading-none font-extrabold sm:text-6xl">{equipos.diasFabricacion}</span>
+              <span class="block text-[0.9375rem] sm:inline sm:text-base"> días hábiles</span>
+            </dd>
+          </div>
+          <div class="border-b border-tinta/25 py-5 pl-4 sm:pl-6">
+            <dt class="text-[0.8125rem] tracking-[0.12em] text-tinta-suave uppercase">Garantía</dt>
+            <dd class="mt-1">
+              <span class="font-display text-5xl leading-none font-extrabold sm:text-6xl">1</span>
+              <span class="text-[0.9375rem] sm:text-base"> año</span>
+              <span class="mt-1 block font-sans text-sm text-tinta-suave">Excepto daños por mal uso</span>
+            </dd>
+          </div>
+
+        <div class="col-span-2 border-b border-tinta/25 py-5">
+          <dt class="text-[0.8125rem] tracking-[0.12em] text-tinta-suave uppercase">Materiales</dt>
+          <dd class="mt-2 font-sans text-lg font-semibold">
+            <ul class="space-y-1">
+              {materiales.map((m) => <li>{m}</li>)}
+            </ul>
+            <p class="mt-1 text-sm font-normal text-tinta-suave">En diferentes capacidades.</p>
+          </dd>
+        </div>
+
+        <div class="col-span-2 pt-5">
+          <dt class="text-[0.8125rem] tracking-[0.12em] text-tinta-suave uppercase">Camión</dt>
+          <dd class="mt-2 font-sans text-[1.0625rem] leading-relaxed">
+            No vendemos camiones: fabricamos el equipo para el suyo. Si aún no tiene camión, le ayudamos a conseguirlo con el concesionario.
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { iniciarUnidades } from '../scripts/unidades';
+  iniciarUnidades();
+</script>

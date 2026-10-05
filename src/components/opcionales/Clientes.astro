@@ -1,0 +1,15 @@
+---
+/** Clientes que se pueden nombrar (con permiso). Vacío = no se muestra. */
+import { opcionales } from '../../config/site';
+const lista = opcionales.clientes;
+---
+{lista.length > 0 && (
+  <section class="border-y border-acero-700 bg-carbon py-10" aria-labelledby="titulo-clientes">
+    <div class="contenedor">
+      <h2 id="titulo-clientes" class="antetitulo text-acero-300">Han confiado en nosotros</h2>
+      <ul class="mt-4 flex flex-wrap gap-x-8 gap-y-2 font-display text-2xl font-extrabold uppercase">
+        {lista.map((c) => <li>{c.nombre}</li>)}
+      </ul>
+    </div>
+  </section>
+)}

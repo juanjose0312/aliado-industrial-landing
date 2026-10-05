@@ -1,0 +1,31 @@
+---
+/** Preguntas frecuentes en <details>. Las respuestas aceptan HTML simple (enlaces). */
+import Icono from './Icono.astro';
+
+interface Props {
+  titulo?: string;
+  preguntas: { pregunta: string; respuesta: string }[];
+}
+const { titulo = 'Preguntas frecuentes', preguntas } = Astro.props;
+---
+<section class="seccion-clara py-16 sm:py-20" aria-labelledby="titulo-faq">
+  <div class="contenedor grid gap-8 lg:grid-cols-[1fr_2fr] lg:gap-14">
+    <div>
+      <p class="antetitulo text-rojo-oscuro">Antes de cotizar</p>
+      <h2 id="titulo-faq" class="titulo-display mt-3 text-4xl sm:text-5xl">{titulo}</h2>
+    </div>
+    <div class="divide-y divide-tinta/15 border-y border-tinta/15">
+      {preguntas.map((p) => (
+        <details class="group">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-lg font-semibold [&::-webkit-details-marker]:hidden">
+            {p.pregunta}
+            <span class="grid size-8 shrink-0 place-items-center rounded-full border border-tinta/25 transition-transform group-open:rotate-45">
+              <Icono nombre="mas" clase="size-4" />
+            </span>
+          </summary>
+          <div class="pb-6 text-[1.0625rem] leading-relaxed text-tinta-suave [&_a]:font-semibold [&_a]:text-rojo-oscuro [&_a]:underline [&_a]:underline-offset-2" set:html={p.respuesta} />
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

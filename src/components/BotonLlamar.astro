@@ -1,0 +1,17 @@
+---
+import Icono from './Icono.astro';
+import { enlaceTelefono } from '../lib/whatsapp';
+import { contacto } from '../config/site';
+
+interface Props {
+  origen: string;
+  texto?: string;
+  variante?: 'primario' | 'secundario' | 'blanco';
+  clase?: string;
+}
+const { origen, texto = `Llamar al ${contacto.telefonoVisible}`, variante = 'secundario', clase = '' } = Astro.props;
+---
+<a href={enlaceTelefono} class:list={['boton', `boton-${variante}`, clase]} data-lead="llamada" data-origen={origen}>
+  <Icono nombre="telefono" clase="size-5 shrink-0" />
+  <span>{texto}</span>
+</a>

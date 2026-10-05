@@ -1,0 +1,35 @@
+---
+/** Barra fija inferior en móvil: WhatsApp | Llamar. El body reserva su alto (ver global.css). */
+import Icono from './Icono.astro';
+import { enlaceWhatsApp, enlaceTelefono } from '../lib/whatsapp';
+
+interface Props {
+  mensajeWA: string;
+}
+const { mensajeWA } = Astro.props;
+---
+<div
+  class="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 border-t border-acero-600 bg-acero-950 md:hidden"
+  style="padding-bottom: env(safe-area-inset-bottom)"
+>
+  <a
+    href={enlaceWhatsApp(mensajeWA)}
+    target="_blank"
+    rel="noopener"
+    class="flex h-16 items-center justify-center gap-2 bg-rojo-boton text-[1.0625rem] font-semibold text-white active:bg-rojo-boton-hover"
+    data-lead="whatsapp"
+    data-origen="barra-movil"
+  >
+    <Icono nombre="whatsapp" clase="size-6" />
+    WhatsApp<span class="sr-only"> (abre WhatsApp en una pestaña nueva)</span>
+  </a>
+  <a
+    href={enlaceTelefono}
+    class="flex h-16 items-center justify-center gap-2 text-[1.0625rem] font-semibold text-white active:bg-acero-800"
+    data-lead="llamada"
+    data-origen="barra-movil"
+  >
+    <Icono nombre="telefono" clase="size-6" />
+    Llamar
+  </a>
+</div>

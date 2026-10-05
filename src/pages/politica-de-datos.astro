@@ -1,0 +1,163 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, contacto, pendientes, mensajesWA, rutas } from '../config/site';
+import { enlaceTelefono, enlaceWhatsApp } from '../lib/whatsapp';
+
+const direccionConfirmada = !pendientes.direccion.falta;
+const vigencia = '3 de octubre de 2026';
+---
+<Base
+  titulo="Política de tratamiento de datos personales | Aliado Industrial"
+  descripcion={`Política de tratamiento de datos personales de ${site.razonSocial} según la Ley 1581 de 2012: finalidades, derechos del titular y cómo ejercerlos.`}
+  pagina="otra"
+  mensajeWA={mensajesWA.general}
+>
+  <article class="seccion-clara py-14 sm:py-20">
+    <div class="contenedor max-w-3xl">
+      <p class="antetitulo text-rojo-oscuro">Ley 1581 de 2012 · Decreto 1377 de 2013</p>
+      <h1 class="titulo-display mt-3 text-4xl sm:text-6xl">Política de tratamiento de datos personales</h1>
+      <p class="mt-4 text-tinta-suave">Vigente desde el {vigencia}.</p>
+
+      <div class="prosa mt-10 space-y-10 text-[1.0625rem] leading-relaxed">
+        <section aria-labelledby="p-responsable">
+          <h2 id="p-responsable">1. Responsable del tratamiento</h2>
+          <dl class="mt-4 grid gap-x-6 gap-y-2 sm:grid-cols-[11rem_1fr]">
+            <dt>Razón social</dt>
+            <dd>{site.razonSocial}</dd>
+            {site.nit && (
+              <>
+                <dt>NIT</dt>
+                <dd>{site.nit}</dd>
+              </>
+            )}
+            <dt>Domicilio</dt>
+            <dd>{direccionConfirmada ? `${contacto.direccion.calle}, ${contacto.direccion.ciudad}, Colombia` : `${site.ciudad}, Colombia`}</dd>
+            <dt>Correo</dt>
+            <dd><a href={`mailto:${contacto.correo}`}>{contacto.correo}</a></dd>
+            <dt>Teléfono y WhatsApp</dt>
+            <dd><a href={enlaceTelefono}>{contacto.telefonoVisibleIntl}</a></dd>
+            {contacto.horario && (
+              <>
+                <dt>Horario de atención</dt>
+                <dd>{contacto.horario}</dd>
+              </>
+            )}
+          </dl>
+        </section>
+
+        <section aria-labelledby="p-datos">
+          <h2 id="p-datos">2. Qué datos recogemos</h2>
+          <p>
+            Por el formulario de cotización recogemos su nombre, empresa, celular o WhatsApp, ciudad y la información de su solicitud (tipo de equipo, capacidad, si tiene camión, qué necesita para su bomba, marca y modelo, y su mensaje). Si nos escribe por WhatsApp, por correo o nos llama, tratamos los datos que usted mismo nos comparte.
+          </p>
+          <p>
+            También registramos datos técnicos de la visita: la página desde la que envía el formulario y, si llegó por un anuncio, los parámetros de la campaña (por ejemplo, gclid o utm). No recogemos datos sensibles ni datos de menores de edad.
+          </p>
+        </section>
+
+        <section aria-labelledby="p-finalidades">
+          <h2 id="p-finalidades">3. Para qué usamos sus datos</h2>
+          <ul>
+            <li>Responder su solicitud de cotización o de información.</li>
+            <li>Contactarle por WhatsApp, llamada o correo para preparar y enviarle la cotización y hacer seguimiento a esa solicitud.</li>
+            <li>Medir cuántos contactos llegan desde nuestros anuncios de Google Ads, para saber si funcionan.</li>
+            <li>Cumplir obligaciones legales y atender requerimientos de autoridades.</li>
+          </ul>
+          <p>No vendemos ni cedemos sus datos a terceros para fines comerciales.</p>
+        </section>
+
+        <section aria-labelledby="p-herramientas">
+          <h2 id="p-herramientas">4. Dónde se guardan y medición con Google Ads</h2>
+          <p>
+            Las solicitudes del formulario se guardan en una hoja de cálculo de Google (Google Workspace) a la que solo accede {site.razonSocial}. Los servidores de Google pueden estar fuera de Colombia; al enviar el formulario usted autoriza esa transmisión, que se hace con la única finalidad de atender su solicitud.
+          </p>
+          <p>
+            Este sitio usa la etiqueta de Google Ads para medir contactos: registra, sin incluir su nombre ni su número, cuándo alguien hace clic en WhatsApp o en llamar, o envía el formulario después de llegar desde un anuncio. La etiqueta usa cookies y tecnologías similares de Google. Puede bloquear las cookies desde la configuración de su navegador y administrar la publicidad personalizada en{' '}
+            <a href="https://myadcenter.google.com/" target="_blank" rel="noopener">Mi Centro de anuncios de Google</a>.
+          </p>
+        </section>
+
+        <section aria-labelledby="p-derechos">
+          <h2 id="p-derechos">5. Sus derechos como titular</h2>
+          <p>Según el artículo 8 de la Ley 1581 de 2012, usted puede:</p>
+          <ul>
+            <li><strong>Conocer</strong> los datos que tenemos sobre usted y acceder a ellos de forma gratuita.</li>
+            <li><strong>Actualizar</strong> y <strong>rectificar</strong> sus datos cuando estén incompletos, inexactos o desactualizados.</li>
+            <li><strong>Suprimir</strong> sus datos cuando no se respeten los principios, derechos y garantías de la ley.</li>
+            <li><strong>Revocar la autorización</strong> que nos dio para tratar sus datos.</li>
+            <li>Pedir prueba de la autorización que nos otorgó y ser informado sobre el uso que les hemos dado.</li>
+            <li>Presentar quejas ante la Superintendencia de Industria y Comercio, después de haber agotado el trámite de consulta o reclamo con nosotros.</li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="p-canal">
+          <h2 id="p-canal">6. Cómo ejercer sus derechos</h2>
+          <p>
+            Escríbanos a <a href={`mailto:${contacto.correo}`}>{contacto.correo}</a> o por{' '}
+            <a href={enlaceWhatsApp('Hola, quiero ejercer mis derechos sobre mis datos personales.')} target="_blank" rel="noopener">WhatsApp al {contacto.telefonoVisibleIntl}</a>. En su solicitud indique su nombre, su número de identificación, el dato o el derecho al que se refiere, y el medio por el que quiere recibir la respuesta.
+          </p>
+          <h3>Plazos de respuesta</h3>
+          <ul>
+            <li>
+              <strong>Consultas:</strong> las respondemos en un máximo de <strong>10 días hábiles</strong> desde que las recibimos. Si no es posible en ese plazo, le informaremos el motivo y le responderemos dentro de los 5 días hábiles siguientes.
+            </li>
+            <li>
+              <strong>Reclamos</strong> (actualización, rectificación, supresión o revocatoria): los atendemos en un máximo de <strong>15 días hábiles</strong> desde el día siguiente a su recibo. Si no es posible en ese plazo, le informaremos el motivo y le responderemos dentro de los 8 días hábiles siguientes. Si el reclamo está incompleto, le pediremos completarlo dentro de los 5 días siguientes; si pasan 2 meses sin que lo complete, se entenderá que desistió.
+            </li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="p-conservacion">
+          <h2 id="p-conservacion">7. Conservación y vigencia</h2>
+          <p>
+            Conservamos sus datos mientras sean necesarios para atender su solicitud y la relación comercial que resulte de ella, o mientras una norma nos obligue a hacerlo. Esta política rige desde el {vigencia}. Si la cambiamos, publicaremos la nueva versión en esta misma página.
+          </p>
+        </section>
+      </div>
+
+      <p class="mt-14 border-t border-tinta/15 pt-6">
+        <a href={rutas.equipos} class="enlace font-semibold text-rojo-oscuro">Equipos tipo vactor y tanques</a>
+        <span class="mx-2 text-tinta-suave" aria-hidden="true">·</span>
+        <a href={rutas.bombas} class="enlace font-semibold text-rojo-oscuro">Bombas de vacío</a>
+      </p>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .prosa :global(h2) {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.875rem;
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+  .prosa :global(h3) {
+    margin-top: 1.25rem;
+    font-weight: 600;
+    font-size: 1.1875rem;
+  }
+  .prosa :global(p),
+  .prosa :global(ul) {
+    margin-top: 0.875rem;
+  }
+  .prosa :global(ul) {
+    list-style: disc;
+    padding-left: 1.25rem;
+  }
+  .prosa :global(li + li) {
+    margin-top: 0.5rem;
+  }
+  .prosa :global(a) {
+    color: var(--color-rojo-oscuro);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .prosa :global(dt) {
+    font-weight: 600;
+  }
+  .prosa :global(dd) {
+    color: var(--color-tinta-suave);
+  }
+</style>

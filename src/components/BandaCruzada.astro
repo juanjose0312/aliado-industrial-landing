@@ -1,0 +1,28 @@
+---
+/** Banda a mitad de página que lleva a la otra landing. La imagen o composición va en el slot "media". */
+import Icono from './Icono.astro';
+
+interface Props {
+  frase: string;
+  detalle: string;
+  href: string;
+  textoBoton: string;
+}
+const { frase, detalle, href, textoBoton } = Astro.props;
+---
+<section class="relative overflow-hidden border-y-4 border-rojo bg-acero-900" aria-label={frase}>
+  <div class="grid md:grid-cols-2">
+    <div class="relative min-h-56 md:min-h-80">
+      <slot name="media" />
+    </div>
+    <div class="contenedor flex flex-col justify-center py-10 md:mx-0 md:max-w-xl md:px-10 lg:px-14">
+      <p class="antetitulo text-acero-300">También le ayudamos con</p>
+      <h2 class="titulo-display mt-3 text-4xl sm:text-5xl">{frase}</h2>
+      <p class="mt-4 text-lg text-acero-200">{detalle}</p>
+      <a href={href} class="boton boton-blanco mt-7 self-start">
+        {textoBoton}
+        <Icono nombre="flecha" />
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,55 @@
+---
+/**
+ * Ilustración de línea de una bomba de vacío genérica (sin marca):
+ * motor con aletas, acople y cuerpo de bomba con corte de rotor y paletas, más un vacuómetro.
+ */
+interface Props {
+  clase?: string;
+}
+const { clase = 'w-full h-auto' } = Astro.props;
+const aletas = Array.from({ length: 9 }, (_, i) => 58 + i * 14);
+---
+<svg class={clase} viewBox="0 0 560 400" fill="none" aria-hidden="true" focusable="false">
+  <g stroke="#a3acb6" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+    <!-- base -->
+    <path d="M30 330h500M48 330v-18h464v18" />
+    <path d="M70 312v-14h170v14M330 312v-14h160v14" />
+    <!-- motor -->
+    <rect x="44" y="150" width="200" height="148" rx="10" />
+    {aletas.map((x) => <path d={`M${x} 158v132`} stroke-opacity="0.55" />)}
+    <rect x="22" y="182" width="22" height="84" rx="4" />
+    <rect x="120" y="118" width="64" height="32" rx="4" />
+    <path d="M132 118v-10h40v10" />
+    <!-- acople -->
+    <rect x="244" y="200" width="44" height="48" rx="3" />
+    <path d="M256 200v48M276 200v48" stroke-opacity="0.55" />
+    <!-- cuerpo de la bomba -->
+    <rect x="288" y="132" width="230" height="166" rx="14" />
+    <circle cx="403" cy="215" r="70" />
+    <circle cx="390" cy="222" r="40" stroke="#ee1922" stroke-width="2.5" />
+    <path d="M390 182l-6 -26M425 205l26 -10M406 258l14 22M356 236l-26 12" stroke="#ee1922" stroke-width="2.5" />
+    <circle cx="390" cy="222" r="7" fill="#ee1922" stroke="none" />
+    <!-- puertos de entrada y salida -->
+    <path d="M340 132v-46h-24v-16h80v16h-24v46" />
+    <path d="M456 132v-30h22v-16h32v16h-22" />
+    <path d="M500 300v12" />
+  </g>
+  <!-- flechas de flujo -->
+  <g stroke="#ff4d55" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M356 40v26M346 54l10 12 10-12" />
+    <path d="M494 72V44M484 54l10-10 10 10" />
+  </g>
+  <!-- vacuómetro sobre la entrada -->
+  <g transform="translate(220 22)">
+    <circle cx="40" cy="40" r="36" stroke="#a3acb6" stroke-width="2" fill="#1a1d21" />
+    <path d="M14 56a30 30 0 1 1 52 0" stroke="#a3acb6" stroke-width="1.5" stroke-dasharray="2 5" />
+    <path d="M40 40L22 24" stroke="#ff4d55" stroke-width="3" stroke-linecap="round" />
+    <circle cx="40" cy="40" r="4" fill="#a3acb6" />
+    <path d="M76 40h20v38" stroke="#a3acb6" stroke-width="2" />
+  </g>
+  <!-- cotas -->
+  <g stroke="#3a4048" stroke-width="1.5">
+    <path d="M44 360h474M44 352v16M518 352v16" />
+  </g>
+  <text x="281" y="386" text-anchor="middle" fill="#a3acb6" font-family="IBM Plex Mono, monospace" font-size="13" letter-spacing="3">VENTA · MANTENIMIENTO · REPUESTOS</text>
+</svg>
